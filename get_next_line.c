@@ -6,7 +6,7 @@
 /*   By: lpinheir <lpinheir@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/23 11:37:31 by lpinheir          #+#    #+#             */
-/*   Updated: 2021/03/01 11:00:22 by lpinheir         ###   ########.fr       */
+/*   Updated: 2021/03/01 13:46:58 by lpinheir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,10 +68,10 @@ int	get_next_line(int fd)
 	size_t		size; // futuro BUFFER_SIZE
 	size_t		len_read; // o quanto leu do arquivo com base em size
 
-	size = 40; // temporary size
+	size = 50; // temporary size
 	if (storage == 0)
 	{
-		if (!(storage = malloc(sizeof(char) * size + 1)))
+		if (!(storage = malloc(sizeof(char*) * size + 1)))
 			return (-1);;
 	}
 	if (!(buffer = malloc(sizeof(char*) * size + 1)))
@@ -83,7 +83,9 @@ int	get_next_line(int fd)
 		while (find_break(temp, strlen(temp), storage) != 0)
 			;
 		free(temp);
+		free(buffer);
 		return (1);
 	}
+	free(storage);
 	return (0);
 }
