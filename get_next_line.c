@@ -6,58 +6,81 @@
 /*   By: lpinheir <lpinheir@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/23 11:37:31 by lpinheir          #+#    #+#             */
-/*   Updated: 2021/02/25 16:07:28 by lpinheir         ###   ########.fr       */
+/*   Updated: 2021/03/01 10:05:48 by lpinheir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <strings.h>
+#include "ft_strjoin.c"
 
-size_t	len_until_break(char *buff, size_t original_len)
+// gnl prints overflow correctly but doesn't process it 
+/*
+size_t	find_brea2(char *buff, size_t original_len, char *storage)
 {
-	size_t	i;
+	size_t 	str_len;
+	char	*temp;
+	char	*buff_n_stor;
+	int	counter;
+
+	counter = 1;
+	str_len = 0;
+	buff_n_stor = 
+}
+*/
+size_t	find_break(char *buff, size_t original_len, char *storage)
+{
+	size_t	str_len;
+	char	*ltemp;
 	
-	i = 0;
-	while (*buff != '\n' && *buff != '\0' && buff != 0 && original_len > 0)
+	str_len = 0;
+	while (original_len >= 0)
 	{
+		if (*buff == '\n')
+		{
+			if (str_len != 0)
+			{
+				ltemp = malloc(sizeof(char) * str_len + 1);
+				strlcpy(ltemp, buff - (str_len), str_len + 1);
+				printf("\nLINE:\n(%s)\n", ltemp);
+				free(ltemp);
+				str_len = 0;
+			}
+		}
+		if (*buff == '\0')
+		{
+			strlcpy(storage, buff - (str_len), str_len + 1);
+			return (0);	
+		}
+		str_len++;
+		buff++;
 		original_len--;
-		i++;
-		buff++;
 	}
-	return (i);
+	printf("end of find break");
+	return (0);
 }
 
-char	*get_next_break(char *buff)
-{
-	while (*buff != '\n')
-		buff++;
-	while (*buff == '\n')
-		buff++;
-	return (buff);
-}
 
-int	get_next_line(int fd, char **line)
+int	get_next_line(int fd)
 {	
-	char 	*buffer;
-	static char	*temp;
-	size_t	size; // futuro BUFFER_SIZE
-	size_t	len_read; // o quanto leu do arquivo com base em size
-	size_t	len_til_break;	
+	char		*buffer;
+	char		*temp;
+	static char	*storage;
+	size_t		size; // futuro BUFFER_SIZE
+	size_t		len_read; // o quanto leu do arquivo com base em size
 
-	size = 200; // temporary size
+	size = 22; // temporary size
+	if (storage == 0)
+	{
+		storage = strdup("");
+	}
 	if (!(buffer = malloc(sizeof(char*) * size + 1)))
 		return (-1);
 	if ((len_read = read(fd, buffer, size)) > 0)
 	{
-		buffer[len_read] = '\0';
-		temp = strndup(buffer, len_read);
+		buffer[len_read] = '\0';	
+		temp = ft_strjoin(storage, buffer);
+		while (find_break(temp, strlen(temp), storage) != 0)
+			;
+		return (1);
 	}
-	else
-		len_read = strlen(temp);	
-	if (*temp == 0)
-		return (0);
-	len_til_break = len_until_break(temp, len_read); // check lenght da s
-	*line = strndup(temp, len_til_break); // copia para line a s
-	temp = get_next_break(temp);	// cria ponteiro para inicio da proxima s
-	free(buffer);
-	return (1);
+	return (0);
 }

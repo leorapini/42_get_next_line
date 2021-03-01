@@ -2,30 +2,38 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <stdio.h>
-#include "get_next_line.c"
 #include <strings.h>
+
+#include "get_next_line.c"
+
+//#include "get_next_line2.c"
+//#include "get_next_line_utils.c"
 
 int     main(void)
 {
-	char    *line;
-	int     fd = open("test.txt", O_RDONLY);
+	int     fd = open("plano_de_carreira.txt", O_RDONLY);
+	int	counter;
+	//char	*line;
 
+	counter = 7;
 	if (fd <= 0)
 	{
 		printf("error\n");
 		return (1);
 	}
-        
-	while (get_next_line(fd, &line) != 0)
-	{
-		printf("\nOUTPUT:\n(%s)\n", line);
- 	}
-        
+	
+	
+	while (get_next_line(fd) == 1)
+		;
+      
+/* 
+	while (counter-- > 0)
+		get_next_line(fd);
+*/      
 	if (close(fd) < 0)
-        {
+	{
                 printf("error\n");
                 return (1);
 	}
-        free(line);
         return (0);     
 }              
