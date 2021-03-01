@@ -6,7 +6,7 @@
 /*   By: lpinheir <lpinheir@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/23 11:37:31 by lpinheir          #+#    #+#             */
-/*   Updated: 2021/03/01 10:29:19 by lpinheir         ###   ########.fr       */
+/*   Updated: 2021/03/01 11:00:22 by lpinheir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,6 @@ size_t	find_break(char *buff, size_t original_len, char *storage)
 		}
 		if (*buff == '\0')
 		{
-			printf("Deu problema?\n");
 			ft_strlcpy(storage, buff - (str_len), str_len + 1);
 			return (0);	
 		}
