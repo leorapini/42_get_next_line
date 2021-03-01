@@ -6,11 +6,12 @@
 /*   By: lpinheir <lpinheir@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/23 11:37:31 by lpinheir          #+#    #+#             */
-/*   Updated: 2021/03/01 10:05:48 by lpinheir         ###   ########.fr       */
+/*   Updated: 2021/03/01 10:29:19 by lpinheir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ft_strjoin.c"
+#include "ft_strlcpy.c"
 
 // gnl prints overflow correctly but doesn't process it 
 /*
@@ -39,7 +40,7 @@ size_t	find_break(char *buff, size_t original_len, char *storage)
 			if (str_len != 0)
 			{
 				ltemp = malloc(sizeof(char) * str_len + 1);
-				strlcpy(ltemp, buff - (str_len), str_len + 1);
+				ft_strlcpy(ltemp, buff - (str_len), str_len + 1);
 				printf("\nLINE:\n(%s)\n", ltemp);
 				free(ltemp);
 				str_len = 0;
@@ -47,7 +48,8 @@ size_t	find_break(char *buff, size_t original_len, char *storage)
 		}
 		if (*buff == '\0')
 		{
-			strlcpy(storage, buff - (str_len), str_len + 1);
+			printf("Deu problema?\n");
+			ft_strlcpy(storage, buff - (str_len), str_len + 1);
 			return (0);	
 		}
 		str_len++;
@@ -67,10 +69,11 @@ int	get_next_line(int fd)
 	size_t		size; // futuro BUFFER_SIZE
 	size_t		len_read; // o quanto leu do arquivo com base em size
 
-	size = 22; // temporary size
+	size = 40; // temporary size
 	if (storage == 0)
 	{
-		storage = strdup("");
+		if (!(storage = malloc(sizeof(char) * size + 1)))
+			return (-1);;
 	}
 	if (!(buffer = malloc(sizeof(char*) * size + 1)))
 		return (-1);
@@ -80,6 +83,7 @@ int	get_next_line(int fd)
 		temp = ft_strjoin(storage, buffer);
 		while (find_break(temp, strlen(temp), storage) != 0)
 			;
+		free(temp);
 		return (1);
 	}
 	return (0);
