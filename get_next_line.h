@@ -1,35 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strlcpy.c                                       :+:      :+:    :+:   */
+/*   get_next_line.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: lpinheir <lpinheir@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/02/04 17:48:19 by lpinheir          #+#    #+#             */
-/*   Updated: 2021/03/01 10:22:51 by lpinheir         ###   ########.fr       */
+/*   Created: 2021/03/02 17:18:44 by lpinheir          #+#    #+#             */
+/*   Updated: 2021/03/02 17:43:00 by lpinheir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_strlen.c"
+#ifndef GET_NEXT_LINE_H
+# define GET_NEXT_LINE_H
 
-size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize)
-{
-	size_t	srclen;
-	size_t	counter;
+# include <unistd.h>
+# include <stdlib.h>
 
-	if (!src)
-		return (0);
-	srclen = ft_strlen(src);
-	if (dstsize == 0)
-		return (srclen);
-	counter = 0;
-	while (*src != 0 && counter < (dstsize - 1))
-	{
-		*dst = *src;
-		src++;
-		dst++;
-		counter++;
-	}
-	*dst = 0;
-	return (srclen);
-}
+int		get_next_line(int fd, char **line);
+size_t	ft_strlen(const char *s);
+size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize);
+char	*ft_strtrim(char const *s1, char const *set);
+char	*ft_strchr(const char *s, int c);
+
+#endif
