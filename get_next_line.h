@@ -13,8 +13,12 @@
 #ifndef GET_NEXT_LINE_H
 # define GET_NEXT_LINE_H
 
+# define OPEN_MAX 50
+
 # include <unistd.h>
 # include <stdlib.h>
+
+
 
 int		get_next_line(int fd, char **line);
 size_t	ft_strlen(const char *s);

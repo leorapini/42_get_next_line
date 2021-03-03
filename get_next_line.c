@@ -69,30 +69,35 @@ int					get_next_line(int fd, char **line)
 {
 	char		*buffer;
 	char		*temp;
-	static char	*storage;
+	static char	*storage[OPEN_MAX];
 	size_t		len_read;
 
 	if (BUFFER_SIZE < 1 || !line || fd < 0)
 		return (-1);
-	if (!(storage))
-		if (!(storage = malloc(sizeof(storage) * BUFFER_SIZE)))
+	if (!(storage[fd]))
+		if (!(storage[fd] = malloc(sizeof(storage) * BUFFER_SIZE)))
 			return (-1);
 	if (!(buffer = malloc(sizeof(*buffer) * BUFFER_SIZE + 1)))
 		return (-1);
 	while ((len_read = read(fd, buffer, BUFFER_SIZE)) > 0)
 	{
 		buffer[len_read] = '\0';
-		temp = joinstr(storage, buffer);
-		storage = temp;
-		if (find_break(storage, line) == 1)
+		temp = joinstr(storage[fd], buffer);
+		free(buffer);
+		free(storage[fd]);
+		storage[fd] = temp;
+		if (find_break(storage[fd], line) == 1)
 		{
 		//	printf("\nSTORAGE:\n%s\n\n", storage);
 			return (1);
 		}
 	}
-	while (find_break(storage, line) == 1)
+	while (find_break(storage[fd], line) == 1)
 	{
+		free(buffer);
 		return (1);
 	}
+	free(storage[fd]);
+	free(buffer);
 	return (0);
 }
