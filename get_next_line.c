@@ -82,10 +82,11 @@ int					get_next_line(int fd, char **line)
 	{
 		buffer[len_read] = '\0';
 		temp = joinstr(storage, buffer);
+		free(buffer);
+		free(storage);
 		storage = temp;
 		if (find_break(storage, line) == 1)
 		{
-			free(buffer);
 			return (1);
 		}
 	}
@@ -94,6 +95,7 @@ int					get_next_line(int fd, char **line)
 		free(buffer);
 		return (1);
 	}
+	free(buffer);
 	free(storage);
 	return (0);
 }
