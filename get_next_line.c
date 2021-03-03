@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+#include <stdio.h>
 
 static char			*joinstr(char const *s1, char const *s2)
 {
@@ -82,20 +83,16 @@ int					get_next_line(int fd, char **line)
 	{
 		buffer[len_read] = '\0';
 		temp = joinstr(storage, buffer);
-		free(buffer);
-		free(storage);
 		storage = temp;
 		if (find_break(storage, line) == 1)
 		{
+		//	printf("\nSTORAGE:\n%s\n\n", storage);
 			return (1);
 		}
 	}
 	while (find_break(storage, line) == 1)
 	{
-		free(buffer);
 		return (1);
 	}
-	free(buffer);
-	free(storage);
 	return (0);
 }
