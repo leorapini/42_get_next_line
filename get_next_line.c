@@ -6,7 +6,7 @@
 /*   By: lpinheir <lpinheir@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/23 11:37:31 by lpinheir          #+#    #+#             */
-/*   Updated: 2021/03/03 10:50:40 by lpinheir         ###   ########.fr       */
+/*   Updated: 2021/03/03 11:08:46 by lpinheir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ int					get_next_line(int fd, char **line)
 	if (!(storage))
 		if (!(storage = malloc(sizeof(storage) * BUFFER_SIZE)))
 			return (-1);
-	if (!(buffer = malloc(sizeof(char) * BUFFER_SIZE)))
+	if (!(buffer = malloc(sizeof(*buffer) * BUFFER_SIZE + 1)))
 		return (-1);
 	while ((len_read = read(fd, buffer, BUFFER_SIZE)) > 0)
 	{
