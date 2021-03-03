@@ -6,7 +6,7 @@
 /*   By: lpinheir <lpinheir@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/23 11:37:31 by lpinheir          #+#    #+#             */
-/*   Updated: 2021/03/02 17:40:09 by lpinheir         ###   ########.fr       */
+/*   Updated: 2021/03/03 10:35:54 by lpinheir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,11 +46,13 @@ static size_t		find_break(char *buff, char **line)
 	{
 		if (*buff == '\n' && str_len != 0)
 		{
-			ltemp = malloc(sizeof(char) * str_len + 1);
+			if (!(ltemp = malloc(sizeof(char) * str_len + 1)))
+				return (-1);
 			ft_strlcpy(ltemp, buff - str_len, str_len + 1);
 			*line = ft_strtrim(ltemp, "\n");
 			free(ltemp);
-			overflow = malloc(sizeof(char) * ft_strlen(buff) + 1);
+			if (!(overflow = malloc(sizeof(char) * ft_strlen(buff) + 1)))
+				return (-1);
 			ft_strlcpy(overflow, buff, ft_strlen(buff) + 1);
 			ft_strlcpy(buff - str_len, overflow, ft_strlen(buff) + 1);
 			free(overflow);
@@ -69,6 +71,8 @@ int					get_next_line(int fd, char **line)
 	static char	*storage;
 	size_t		len_read;
 
+	if (BUFFER_SIZE < 1 || !line || fd < 0)
+		return (-1);
 	if (!(storage))
 		if (!(storage = malloc(sizeof(storage) * BUFFER_SIZE + 1)))
 			return (-1);
@@ -86,8 +90,10 @@ int					get_next_line(int fd, char **line)
 		}
 	}
 	while (find_break(storage, line) == 1)
+	{
+		free(buffer);
 		return (1);
-	free(buffer);
+	}
 	free(storage);
 	return (0);
 }

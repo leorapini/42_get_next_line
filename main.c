@@ -6,7 +6,7 @@
 
 int     main(void)
 {
-	int     fd = open("test.txt", O_RDONLY);
+	int     fd = open("plano_de_carreira.txt", O_RDONLY);
 	char	*line;
 
 	if (fd <= 0)
