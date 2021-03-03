@@ -4,28 +4,24 @@
 
 #include "get_next_line.h"
 
-int     main(void)
+int     main(int ac, char **av)
 {
-	int     fd = open("plano_de_carreira.txt", O_RDONLY);
+	int     fd;
 	char	*line;
 
-	if (fd <= 0)
+	if (ac < 2)
 	{
-		printf("error\n");
+		printf("missing file name\n");
 		return (1);
 	}
 	
+	fd = open(av[1], O_RDONLY);
 	while (get_next_line(fd, &line) == 1)
 	{
-		printf("(%s)\n", line);
+		printf("%s\n", line);
 		free(line);
 	}
 		
-      
-	if (close(fd) < 0)
-	{
-                printf("error\n");
-                return (1);
-	}
+	close(fd);     
         return (0);     
 }              
