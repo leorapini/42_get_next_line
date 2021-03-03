@@ -83,8 +83,6 @@ int					get_next_line(int fd, char **line)
 	{
 		buffer[len_read] = '\0';
 		temp = joinstr(storage[fd], buffer);
-		free(buffer);
-		free(storage[fd]);
 		storage[fd] = temp;
 		if (find_break(storage[fd], line) == 1)
 		{
@@ -94,10 +92,7 @@ int					get_next_line(int fd, char **line)
 	}
 	while (find_break(storage[fd], line) == 1)
 	{
-		free(buffer);
 		return (1);
 	}
-	free(storage[fd]);
-	free(buffer);
 	return (0);
 }
