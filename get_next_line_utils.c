@@ -6,11 +6,25 @@
 /*   By: lpinheir <lpinheir@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/02 16:55:27 by lpinheir          #+#    #+#             */
-/*   Updated: 2021/03/02 18:23:52 by lpinheir         ###   ########.fr       */
+/*   Updated: 2021/03/03 15:51:47 by lpinheir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+
+char	*ft_strdup(const char *s1)
+{
+	int		i;
+	char	*s;
+
+	i = -1;
+	if (!s1 || !(s = malloc((ft_strlen(s1) + 1) * sizeof(*s))))
+		return (NULL);
+	while (s1[++i])
+		s[i] = s1[i];
+	s[i] = '\0';
+	return (s);
+}
 
 size_t			ft_strlen(const char *s)
 {
@@ -64,6 +78,7 @@ char			*ft_strchr(const char *s, int c)
 	return (0);
 }
 
+/*
 static size_t	ft_trimindex(const char *s1, const char *set, int start)
 {
 	size_t	i;
@@ -90,7 +105,50 @@ static size_t	ft_trimindex(const char *s1, const char *set, int start)
 	}
 	return (i);
 }
+*/
+static int	ft_charset(char c, char const *set)
+{
+	if (!*set)
+		return (0);
+	else if (c == *set)
+		return (1);
+	else
+		return (ft_charset(c, ++set));
+}
 
+static int	ft_left_trim(char const *s1, char const *set)
+{
+	if (!(*s1 && ft_charset(*(char *)s1, set)))
+		return (0);
+	else
+		return (ft_left_trim(++s1, set) + 1);
+}
+
+static int	ft_right_trim(char const *s1, char const *set, size_t len)
+{
+	while (s1[len] && ft_charset(s1[len], set))
+		len--;
+	return (len + 1);
+}
+
+char		*ft_strtrim(char const *s1, char const *set)
+{
+	char	*trim;
+	int		lt;
+	int		rt;
+
+	if (!s1 || !set)
+		return (NULL);
+	lt = ft_left_trim(s1, set);
+	rt = ft_right_trim(s1, set, ft_strlen(s1) - 1);
+	rt < lt ? rt = lt : rt;
+	if (!(trim = malloc((rt - lt + 1) * sizeof(*trim))))
+		return (NULL);
+	ft_strlcpy(trim, &s1[lt], rt - lt + 1);
+	return (trim);
+}
+
+/*
 char			*ft_strtrim(char const *s1, char const *set)
 {
 	size_t	start_i;
@@ -104,13 +162,13 @@ char			*ft_strtrim(char const *s1, char const *set)
 	end_i = ft_trimindex(s1, set, 0);
 	if (start_i > end_i)
 	{
-		emptystr = (char *)malloc(sizeof(char*) * 2);
-		ft_strlcpy(emptystr, "", 2);
+		emptystr = ft_strdup("");
 		return (emptystr);
 	}
-	buffer = (char *)malloc(sizeof(char) * (end_i - start_i + 2));
+	buffer = malloc(sizeof(*buffer) * (end_i - start_i + 2));
 	if (!buffer)
 		return (NULL);
 	ft_strlcpy(buffer, s1 + start_i, end_i - start_i + 2);
 	return (buffer);
 }
+*/

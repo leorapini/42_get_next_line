@@ -6,14 +6,13 @@
 /*   By: lpinheir <lpinheir@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/23 11:37:31 by lpinheir          #+#    #+#             */
-/*   Updated: 2021/03/03 11:08:46 by lpinheir         ###   ########.fr       */
+/*   Updated: 2021/03/03 16:07:54 by lpinheir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include <stdio.h>
-#include <strings.h>
 
+/*
 static char			*joinstr(char const *s1, char const *s2)
 {
 	int		i;
@@ -35,6 +34,30 @@ static char			*joinstr(char const *s1, char const *s2)
 		buffer[j++] = s2[i++];
 	buffer[j] = 0;
 	return (buffer);
+}
+*/
+
+char	*joinstr(char const *s1, char const *s2)
+{
+	int		i;
+	int		len1;
+	int		len2;
+	char	*join;
+
+	if (!s1 || !s2)
+		return (NULL);
+	i = -1;
+	len1 = ft_strlen(s1);
+	len2 = ft_strlen(s2);
+	if (!(join = malloc((len1 + len2 + 1) * sizeof(*join))))
+		return (NULL);
+	while (s1[++i])
+		join[i] = s1[i];
+	i = -1;
+	while (s2[++i])
+		join[len1++] = s2[i];
+	join[len1] = '\0';
+	return (join);
 }
 
 static size_t		find_break(char *buff, char **line)
@@ -76,7 +99,7 @@ int					get_next_line(int fd, char **line)
 	if (BUFFER_SIZE < 1 || !line || fd < 0)
 		return (-1);
 	if (!(storage[fd]))
-		if (!(storage[fd] = malloc(sizeof(storage) * BUFFER_SIZE)))
+		if (!(storage[fd] = ft_strdup("")))
 			return (-1);
 	if (!(buffer = malloc(sizeof(*buffer) * BUFFER_SIZE + 1)))
 		return (-1);
@@ -86,7 +109,7 @@ int					get_next_line(int fd, char **line)
 		temp = joinstr(storage[fd], buffer);
 		free(storage[fd]);
 		storage[fd] = temp;
-		if (find_break(storage[fd], line) == 1)
+		if ((find_break(storage[fd], line)) == 1)
 		{
 			free(buffer);
 			return (1);
@@ -95,7 +118,7 @@ int					get_next_line(int fd, char **line)
 	temp = joinstr("", storage[fd]);
 	free(storage[fd]);
 	storage[fd] = temp;
-	if (find_break(storage[fd], line) == 1)
+	if ((find_break(storage[fd], line)) == 1)
 	{
 		free(buffer);
 		return (1);

@@ -6,7 +6,7 @@
 /*   By: lpinheir <lpinheir@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/02 17:18:44 by lpinheir          #+#    #+#             */
-/*   Updated: 2021/03/02 17:43:00 by lpinheir         ###   ########.fr       */
+/*   Updated: 2021/03/03 15:51:32 by lpinheir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,5 +25,6 @@ size_t	ft_strlen(const char *s);
 size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize);
 char	*ft_strtrim(char const *s1, char const *set);
 char	*ft_strchr(const char *s, int c);
+char	*ft_strdup(const char *s1);
 
 #endif
