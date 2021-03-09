@@ -1,16 +1,16 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   get_next_line_utils.c                              :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: lpinheir <lpinheir@student.42sp.org.br>    +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/03/02 16:55:27 by lpinheir          #+#    #+#             */
-/*   Updated: 2021/03/03 15:51:47 by lpinheir         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
+#include <stdio.h>
+#include <unistd.h>
+#include <stdlib.h>
 
-#include "get_next_line.h"
+size_t			ft_strlen(const char *s)
+{
+	size_t	len;
+
+	len = 0;
+	while (*s++ != 0)
+		len++;
+	return (len);
+}
 
 char	*ft_strdup(const char *s1)
 {
@@ -24,16 +24,6 @@ char	*ft_strdup(const char *s1)
 		s[i] = s1[i];
 	s[i] = '\0';
 	return (s);
-}
-
-size_t			ft_strlen(const char *s)
-{
-	size_t	len;
-
-	len = 0;
-	while (*s++ != 0)
-		len++;
-	return (len);
 }
 
 size_t			ft_strlcpy(char *dst, const char *src, size_t dstsize)
@@ -79,7 +69,7 @@ char			*ft_strchr(const char *s, int c)
 }
 
 
-static size_t	ft_trimindex(const char *s1, const char *set, int start)
+size_t	ft_trimindex(const char *s1, const char *set, int start)
 {
 	size_t	i;
 
@@ -130,3 +120,47 @@ char			*ft_strtrim(char const *s1, char const *set)
 	return (buffer);
 }
 
+
+
+size_t		find_break(char *buff, char **line)
+{
+	size_t	str_len;
+	char	*ltemp;
+	char	*overflow;
+
+	str_len = 0;
+	while (*buff != '\0')
+	{
+		if (*buff == '\n' && str_len != 0)
+		{
+			if (!(ltemp = malloc(sizeof(char) * str_len + 1)))
+				return (-1);
+			ft_strlcpy(ltemp, buff - str_len, str_len + 1);
+			*line = ft_strtrim(ltemp, "\n");
+			free(ltemp);
+			if (!(overflow = malloc(sizeof(char) * ft_strlen(buff) + 1)))
+				return (-1);
+			ft_strlcpy(overflow, buff, ft_strlen(buff) + 1);
+			ft_strlcpy(buff - str_len, overflow, ft_strlen(buff) + 1);
+			free(overflow);
+			return (1);
+		}
+		str_len++;
+		buff++;
+	}
+	return (0);
+}
+
+int	main(void)
+{
+	char	*line;
+	char	string[] = "Long string with many\nmany\nmany\n\nmany breaks.\n";
+
+	while (find_break(string, &line) == 1)
+	{
+		printf("\nLINE\n(%s)\n", line);
+		free(line);
+	}
+
+	return (0);
+}

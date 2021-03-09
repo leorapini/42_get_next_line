@@ -6,7 +6,7 @@
 /*   By: lpinheir <lpinheir@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/23 11:37:31 by lpinheir          #+#    #+#             */
-/*   Updated: 2021/03/09 11:22:26 by lpinheir         ###   ########.fr       */
+/*   Updated: 2021/03/09 11:15:31 by lpinheir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ static char			*joinstr(char const *s1, char const *s2)
 	return (buffer);
 }
 
-static size_t		find_break(char *buff, char **line)
+static size_t		find_line(char *buff, char **line)
 {
 	size_t	str_len;
 	char	*ltemp;
@@ -51,12 +51,10 @@ static size_t		find_break(char *buff, char **line)
 				return (-1);
 			ft_strlcpy(ltemp, buff - str_len, str_len + 1);
 			*line = ft_strtrim(ltemp, "\n");
-			free(ltemp);
 			if (!(overflow = malloc(sizeof(char) * ft_strlen(buff) + 1)))
 				return (-1);
 			ft_strlcpy(overflow, buff, ft_strlen(buff) + 1);
 			ft_strlcpy(buff - str_len, overflow, ft_strlen(buff) + 1);
-			free(overflow);
 			return (1);
 		}
 		str_len++;
@@ -65,41 +63,48 @@ static size_t		find_break(char *buff, char **line)
 	return (0);
 }
 
+static int	is_there_stuff(int fd, char *buffer, char **line)
+{
+	size_t	len_read;
+	char	*temp;
+	static char	*storage[OPEN_MAX];
+
+	if (!(storage[fd]))
+		storage[fd] = ft_strdup("");
+	while ((len_read = read(fd, buffer, BUFFER_SIZE)) > 0)
+	{
+		printf("\nREAD: buffer is (%s)\n", buffer);
+		buffer[len_read] = '\0';
+		temp = joinstr(storage[fd], buffer);
+		storage[fd] = temp;
+		printf("\nREAD: storage is (%s)\n", storage[fd]);
+		find_line(storage[fd], line);
+		return (1);
+	}
+	printf("\nSTOR len is %zu\n", ft_strlen(storage[fd]));	
+	if (ft_strlen(storage[fd]) > 1)
+	{
+		printf("\nSTOR len is %zu\n", ft_strlen(storage[fd]));
+		temp = joinstr("", storage[fd]);
+		storage[fd] = temp;
+		printf("\nSTOR: storage is (%s)\n", storage[fd]);
+		find_line(storage[fd], line);
+		return (1);
+	}
+	return (0);
+
+}
+
+
 int					get_next_line(int fd, char **line)
 {
 	char		*buffer;
-	char		*temp;
-	static char	*storage[OPEN_MAX];
-	size_t		len_read;
 
 	if (BUFFER_SIZE < 1 || !line || fd < 0)
 		return (-1);
-	if (!(storage[fd]))
-		if (!(storage[fd] = ft_strdup("")))
-			return (-1);
 	if (!(buffer = malloc(sizeof(*buffer) * BUFFER_SIZE + 1)))
 		return (-1);
-	while ((len_read = read(fd, buffer, BUFFER_SIZE)) > 0)
-	{
-		buffer[len_read] = '\0';
-		temp = joinstr(storage[fd], buffer);
-		free(storage[fd]);
-		storage[fd] = temp;
-		if ((find_break(storage[fd], line)) == 1)
-		{
-			free(buffer);
-			return (1);
-		}
-	}
-	temp = joinstr("", storage[fd]);
-	free(storage[fd]);
-	storage[fd] = temp;
-	if ((find_break(storage[fd], line)) == 1)
-	{
-		free(buffer);
+	if (is_there_stuff(fd, buffer, line) == 1)
 		return (1);
-	}
-	free(storage[fd]);
-	free(buffer);
 	return (0);
 }
