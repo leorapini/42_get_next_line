@@ -11,21 +11,21 @@
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-
+#include <stdio.h>
 
 
 char	*ft_strdup(const char *s1)
 {
-	int		i;
-	char	*s;
+	char	*buffer;
+	int len;
 
-	i = -1;
-	if (!s1 || !(s = malloc((ft_strlen(s1) + 1) * sizeof(*s))))
+	printf("DUP");
+	len = ft_strlen(s1);
+	buffer = (char *)malloc(sizeof(*s1) * (len + 1));
+	if (buffer == NULL)
 		return (NULL);
-	while (s1[++i])
-		s[i] = s1[i];
-	s[i] = '\0';
-	return (s);
+	ft_strlcpy(buffer, s1, len + 1);
+	return (buffer);
 }
 
 size_t			ft_strlen(const char *s)

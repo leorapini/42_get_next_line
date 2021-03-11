@@ -51,7 +51,7 @@ static size_t		find_break(char **buff, char **line)
 	if (*buff[0] == '\0')
 	{
 		*line = ft_strdup("");
-	//	printf("FB: BUFF '\\0', Return (0)\n");
+		printf("FB: BUFF '\\0', Return (0)\n");
 		return (0);
 	}
 	if((overflow = strchr(*buff, 10)) == NULL)
@@ -63,7 +63,7 @@ static size_t		find_break(char **buff, char **line)
 		str_len++;
 	if ((*buff)[0] == '\n')
 	{
-	//	printf("FB: buff[0] is '\\n line - dup()\n");
+		printf("FB: buff[0] is '\\n line - dup()\n");
 		*line = ft_strdup("");
 	}
 	else
