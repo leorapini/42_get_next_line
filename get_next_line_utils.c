@@ -12,6 +12,8 @@
 
 #include "get_next_line.h"
 
+
+
 char	*ft_strdup(const char *s1)
 {
 	int		i;
@@ -34,6 +36,30 @@ size_t			ft_strlen(const char *s)
 	while (*s++ != 0)
 		len++;
 	return (len);
+}
+
+char	*ft_substr(char const *s, unsigned int start, size_t len)
+{
+	char	*buffer;
+	int		i;
+
+	if (s == NULL)
+		return (NULL);
+	if (start >= ft_strlen(s))
+		return (ft_strdup(""));
+	buffer = (char *)malloc(sizeof(*s) * (len + 1));
+	if (buffer == NULL)
+		return (NULL);
+	i = 0;
+	while (len > 0)
+	{
+		buffer[i] = s[start];
+		i++;
+		start++;
+		len--;
+	}
+	buffer[i] = 0;
+	return (buffer);
 }
 
 size_t			ft_strlcpy(char *dst, const char *src, size_t dstsize)

@@ -6,12 +6,14 @@
 /*   By: lpinheir <lpinheir@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/23 11:37:31 by lpinheir          #+#    #+#             */
-/*   Updated: 2021/03/09 11:22:26 by lpinheir         ###   ########.fr       */
+/*   Updated: 2021/03/11 15:59:38 by lpinheir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 #include <stdio.h>
+#include <string.h>
+#include <strings.h>
 
 static char			*joinstr(char const *s1, char const *s2)
 {
@@ -36,33 +38,46 @@ static char			*joinstr(char const *s1, char const *s2)
 	return (buffer);
 }
 
-static size_t		find_break(char *buff, char **line)
+static size_t		find_break(char **buff, char **line)
 {
-	size_t	str_len;
+	int	str_len;
+	int	i;
 	char	*ltemp;
 	char	*overflow;
 
+	i = 0;
 	str_len = 0;
-	while (*buff != '\0')
+	//printf("FIND_BREAK START\n");
+	if (*buff[0] == '\0')
 	{
-		if (*buff == '\n' && str_len != 0)
-		{
-			if (!(ltemp = malloc(sizeof(char) * str_len + 1)))
-				return (-1);
-			ft_strlcpy(ltemp, buff - str_len, str_len + 1);
-			*line = ft_strtrim(ltemp, "\n");
-			free(ltemp);
-			if (!(overflow = malloc(sizeof(char) * ft_strlen(buff) + 1)))
-				return (-1);
-			ft_strlcpy(overflow, buff, ft_strlen(buff) + 1);
-			ft_strlcpy(buff - str_len, overflow, ft_strlen(buff) + 1);
-			free(overflow);
-			return (1);
-		}
-		str_len++;
-		buff++;
+		*line = ft_strdup("");
+	//	printf("FB: BUFF '\\0', Return (0)\n");
+		return (0);
 	}
-	return (0);
+	if((overflow = strchr(*buff, 10)) == NULL)
+	{ 
+	//	printf("FB: NO '\\n' in Buffer, Return (0)\n");
+		return (0);
+	}
+	while ((*buff)[str_len] != '\0' && (*buff)[str_len] != '\n')
+		str_len++;
+	if ((*buff)[0] == '\n')
+	{
+	//	printf("FB: buff[0] is '\\n line - dup()\n");
+		*line = ft_strdup("");
+	}
+	else
+	{
+	//	printf("FB: line points to ltemp. str_len is %d\n", str_len);
+		ltemp = ft_substr(*buff, 0, str_len);
+		*line = ltemp;
+	}
+	bzero(*buff, str_len);
+	//printf("FB: Storage zeroed\n");
+	ft_strlcpy(*buff, overflow + 1, ft_strlen(overflow));
+	//printf("FB: Overflow copied to storage\n");
+	//printf("FIND_BREAK ENDS, Return (0)\n");
+	return (1);
 }
 
 int					get_next_line(int fd, char **line)
@@ -70,36 +85,56 @@ int					get_next_line(int fd, char **line)
 	char		*buffer;
 	char		*temp;
 	static char	*storage[OPEN_MAX];
-	size_t		len_read;
+	int		len_read;
 
-	if (BUFFER_SIZE < 1 || !line || fd < 0)
+	if (BUFFER_SIZE < 1 || !line || fd < 0 || fd > OPEN_MAX)
+	{
+	//	printf("Return -1 (BFSize, Line, Fd or OpenMax)\n");
 		return (-1);
+	}
 	if (!(storage[fd]))
+	{
+	//	printf("Malloc(ed) Storage[%d]\n", fd);
 		if (!(storage[fd] = ft_strdup("")))
+		{	
+	//		printf("Return -1 (Storage Alloc)\n");
 			return (-1);
+		}
+	}
 	if (!(buffer = malloc(sizeof(*buffer) * BUFFER_SIZE + 1)))
 		return (-1);
+	//printf("Malloc(ed) Buffer\n");
 	while ((len_read = read(fd, buffer, BUFFER_SIZE)) > 0)
 	{
+	//	printf("GNL: Found stuff to read\n");
 		buffer[len_read] = '\0';
 		temp = joinstr(storage[fd], buffer);
 		free(storage[fd]);
 		storage[fd] = temp;
-		if ((find_break(storage[fd], line)) == 1)
+		if ((find_break(&(storage[fd]), line)) == 1)
 		{
 			free(buffer);
+	//		printf("GNL: Found Break in Read, Buffer Freed, Return 1\n");
 			return (1);
 		}
 	}
+	if (len_read < 0)
+	{
+	//	printf("len_read < 0, Return -1\n");
+		return (-1);
+	}
+	//printf("NOTHING TO READ, reading from storage\n");
 	temp = joinstr("", storage[fd]);
 	free(storage[fd]);
 	storage[fd] = temp;
-	if ((find_break(storage[fd], line)) == 1)
+	if ((find_break(&(storage[fd]), line)) == 1)
 	{
 		free(buffer);
+	//	printf("Found Break in Read, Buffer Freed, Return 1\n");
 		return (1);
 	}
 	free(storage[fd]);
 	free(buffer);
+	//printf("Found nothing in storage, Buffer + Storage Freed, END (0)\n");
 	return (0);
 }
