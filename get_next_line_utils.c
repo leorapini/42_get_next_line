@@ -6,24 +6,11 @@
 /*   By: lpinheir <lpinheir@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/02 16:55:27 by lpinheir          #+#    #+#             */
-/*   Updated: 2021/03/11 17:59:32 by lpinheir         ###   ########.fr       */
+/*   Updated: 2021/03/12 13:29:31 by lpinheir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-
-char	*ft_strdup(const char *s1)
-{
-	char	*buffer;
-	int len;
-
-	len = ft_strlen(s1);
-	buffer = (char *)malloc(sizeof(*s1) * (len + 1));
-	if (buffer == NULL)
-		return (NULL);
-	ft_strlcpy(buffer, s1, len + 1);
-	return (buffer);
-}
 
 size_t			ft_strlen(const char *s)
 {
@@ -35,7 +22,20 @@ size_t			ft_strlen(const char *s)
 	return (len);
 }
 
-char	*ft_substr(char const *s, unsigned int start, size_t len)
+char			*ft_strdup(const char *s1)
+{
+	char	*buffer;
+	int		len;
+
+	len = ft_strlen(s1);
+	buffer = (char *)malloc(sizeof(*s1) * (len + 1));
+	if (buffer == NULL)
+		return (NULL);
+	ft_strlcpy(buffer, s1, len + 1);
+	return (buffer);
+}
+
+char			*ft_substr(char const *s, unsigned int start, size_t len)
 {
 	char	*buffer;
 	int		i;
@@ -56,6 +56,29 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 		len--;
 	}
 	buffer[i] = 0;
+	return (buffer);
+}
+
+char			*ft_strjoin(char const *s1, char const *s2)
+{
+	int		i;
+	int		j;
+	char	*buffer;
+
+	if (!s1 || !s2)
+		return (NULL);
+	i = 0;
+	j = 0;
+	buffer = (char*)malloc(sizeof(*s1) *
+			((ft_strlen(s1) + ft_strlen(s2)) + 1));
+	if (buffer == NULL)
+		return (NULL);
+	while (s1[i] != 0)
+		buffer[j++] = s1[i++];
+	i = 0;
+	while (s2[i] != 0)
+		buffer[j++] = s2[i++];
+	buffer[j] = 0;
 	return (buffer);
 }
 
@@ -80,76 +103,3 @@ size_t			ft_strlcpy(char *dst, const char *src, size_t dstsize)
 	*dst = 0;
 	return (srclen);
 }
-
-char			*ft_strchr(const char *s, int c)
-{
-	char	target;
-	size_t		len;
-
-	target = (char)c;
-	len = ft_strlen(s);
-	while (len >= 0)
-	{
-		if (*s == target && target == '\0')
-			return ((char *)s);
-		if (*s == target)
-			return ((char *)s);
-		if (*s == '\0')
-			return (0);
-		s++;
-	}
-	return (0);
-}
-
-
-static size_t	ft_trimindex(const char *s1, const char *set, int start)
-{
-	size_t	i;
-
-	if (start == 1)
-	{
-		i = 0;
-		while (s1[i] != 0)
-		{
-			if (ft_strchr(set, s1[i]) == 0)
-				break ;
-			i++;
-		}
-		return (i);
-	}
-	if (ft_strlen(s1) == 0)
-		return (0);
-	i = ft_strlen(s1) - 1;
-	while (i > 0)
-	{
-		if (ft_strchr(set, s1[i]) == 0)
-			break ;
-		i--;
-	}
-	return (i);
-}
-
-
-char			*ft_strtrim(char const *s1, char const *set)
-{
-	size_t	start_i;
-	size_t	end_i;
-	char	*emptystr;
-	char	*buffer;
-
-	if (!s1)
-		return (NULL);
-	start_i = ft_trimindex(s1, set, 1);
-	end_i = ft_trimindex(s1, set, 0);
-	if (start_i > end_i)
-	{
-		emptystr = ft_strdup("");
-		return (emptystr);
-	}
-	buffer = malloc(sizeof(*buffer) * (end_i - start_i + 2));
-	if (!buffer)
-		return (NULL);
-	ft_strlcpy(buffer, s1 + start_i, end_i - start_i + 2);
-	return (buffer);
-}
-
