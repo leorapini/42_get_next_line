@@ -6,7 +6,7 @@
 /*   By: lpinheir <lpinheir@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/23 11:37:31 by lpinheir          #+#    #+#             */
-/*   Updated: 2021/03/12 00:47:13 by lpinheir         ###   ########.fr       */
+/*   Updated: 2021/03/12 00:02:49 by lpinheir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,13 +58,22 @@ static size_t		find_break(char *buff, char **line, int len_read)
 	char	*ltemp;
 	char	*overflow;
 
-	i = len_read;
+	i = 0;
 	str_len = 0;
 //	printf("FIND_BREAK START\n");
 //	printf("Buff is %c\n", buff[0]);
 //	printf("Buff len_read is %d\n", len_read);
-	// testar novamente o len_read, porém o resultado final deve ser 0 na última
-	if (buff[0] == '\0')
+	while (buff[str_len] != '\0' && buff[str_len] != '\n')
+		str_len++;
+	if (len_read == 0 && buff[str_len] == '\0' && ft_strlen(buff) > 0)
+	{		
+		ltemp = ft_strdup(buff);
+		*line = ltemp;
+		bzero(buff, ft_strlen(buff));
+//		printf("ENTRAMOS\n");
+		return (1);
+	}
+	else if (buff[0] == '\0')
 	{
 		*line = ft_strdup("");
 		//printf("FB: BUFF '\\0', Return (0)\n");
@@ -75,8 +84,6 @@ static size_t		find_break(char *buff, char **line, int len_read)
 		//printf("FB: NO '\\n' in Buffer, Return (0)\n");
 		return (0);
 	}
-	while (buff[str_len] != '\0' && buff[str_len] != '\n')
-		str_len++;
 	if (buff[0] == '\n')
 	{
 		//printf("FB: buff[0] is '\\n line - dup()\n");
@@ -136,7 +143,7 @@ int					get_next_line(int fd, char **line)
 	}
 	if (len_read < 0)
 	{
-//		printf("len_read < 0, Return -1\n");
+		printf("len_read < 0, Return -1\n");
 		return (-1);
 	}
 	//printf("NOTHING TO READ, reading from storage\n");
@@ -146,14 +153,20 @@ int					get_next_line(int fd, char **line)
 	if ((find_break(storage[fd], line, len_read)) == 1)
 	{
 		free(buffer);
-//		printf("GNL storage len is %zu\n", ft_strlen(storage[fd]));
+		printf("GNL storage len is %zu\n", ft_strlen(storage[fd]));
+		if (ft_strlen(storage[fd]) == 0)
+			return (0);
 //		printf("Found Break in Read, Buffer Freed, Return 1\n");
 		return (1);
 	}
+	/*
 	if (ft_strlen(storage[fd]) > 0)
-	{
-		*line = ft_strdup(storage[fd]);
+	{	
+		free(buffer);
+		printf("LAST CHANGE\n");
+		return (last_chance(storage[fd], line));
 	}
+	*/
 	free(storage[fd]);
 	free(buffer);
 //	printf("Found nothing in storage, Buffer + Storage Freed, END (0)\n");

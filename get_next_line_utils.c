@@ -6,20 +6,17 @@
 /*   By: lpinheir <lpinheir@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/02 16:55:27 by lpinheir          #+#    #+#             */
-/*   Updated: 2021/03/03 15:51:47 by lpinheir         ###   ########.fr       */
+/*   Updated: 2021/03/11 17:59:32 by lpinheir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include <stdio.h>
-
 
 char	*ft_strdup(const char *s1)
 {
 	char	*buffer;
 	int len;
 
-	printf("DUP");
 	len = ft_strlen(s1);
 	buffer = (char *)malloc(sizeof(*s1) * (len + 1));
 	if (buffer == NULL)
