@@ -6,12 +6,11 @@
 /*   By: lpinheir <lpinheir@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/23 11:37:31 by lpinheir          #+#    #+#             */
-/*   Updated: 2021/03/12 13:40:18 by lpinheir         ###   ########.fr       */
+/*   Updated: 2021/03/12 16:13:06 by lpinheir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include <stdio.h>
 
 static void			ft_bzero(void *s, size_t n)
 {
@@ -84,10 +83,8 @@ int					get_next_line(int fd, char **line)
 	if (BUFFER_SIZE < 1 || !line || fd < 0 || fd > OPEN_MAX)
 		return (-1);
 	if (!(storage[fd]))
-	{
 		if (!(storage[fd] = ft_strdup("")))
 			return (-1);
-	}
 	if (!(buffer = malloc(sizeof(*buffer) * BUFFER_SIZE + 1)))
 		return (-1);
 	while ((len_read = read(fd, buffer, BUFFER_SIZE)) > 0)
@@ -97,24 +94,18 @@ int					get_next_line(int fd, char **line)
 		free(storage[fd]);
 		storage[fd] = temp;
 		if ((find_break(storage[fd], line)) == 1)
-		{
-			free(buffer);
 			return (1);
-		}
 	}
+	free(buffer);
 	if (len_read < 0)
-		return (-1);
-	temp = ft_strjoin("", storage[fd]);
-	free(storage[fd]);
-	storage[fd] = temp;
-	if ((find_break(storage[fd], line)) == 1)
 	{
-		free(buffer);
-		return (1);
+		free(storage[fd]);
+		return (-1);
 	}
+	else if ((find_break(storage[fd], line)) == 1)
+		return (1);
 	if (ft_strlen(storage[fd]) > 0)
 		*line = ft_strdup(storage[fd]);
 	free(storage[fd]);
-	free(buffer);
 	return (0);
 }
