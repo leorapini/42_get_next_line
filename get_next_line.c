@@ -6,11 +6,12 @@
 /*   By: lpinheir <lpinheir@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/23 11:37:31 by lpinheir          #+#    #+#             */
-/*   Updated: 2021/03/12 16:13:06 by lpinheir         ###   ########.fr       */
+/*   Updated: 2021/03/15 12:02:53 by lpinheir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+#include <stdio.h>
 
 static void			ft_bzero(void *s, size_t n)
 {
@@ -48,7 +49,6 @@ static char			*ft_strchr(const char *s, int c)
 static size_t		find_break(char *buff, char **line)
 {
 	int		str_len;
-	char	*ltemp;
 	char	*overflow;
 
 	str_len = 0;
@@ -64,45 +64,57 @@ static size_t		find_break(char *buff, char **line)
 	if (buff[0] == '\n')
 		*line = ft_strdup("");
 	else
-	{
-		ltemp = ft_substr(buff, 0, str_len);
-		*line = ltemp;
-	}
+		*line = ft_substr(buff, 0, str_len);
 	ft_bzero(buff, str_len);
 	ft_strlcpy(buff, overflow + 1, ft_strlen(overflow));
 	return (1);
 }
 
+static int			read_buffer(int fd, char **storage, char **line)
+{
+	char	*buffer;
+	char	*temp;
+	int		len_read;
+
+	buffer = malloc(sizeof(*buffer) * BUFFER_SIZE + 1);
+	while ((len_read = read(fd, buffer, BUFFER_SIZE)) > 0)
+	{
+		buffer[len_read] = '\0';
+		temp = ft_strjoin(*storage, buffer);
+		free(*storage);
+		*storage = temp;
+		if ((find_break(*storage, line)) == 1)
+		{
+			free(buffer);
+			return (1);
+		}
+	}
+	free(buffer);
+	if (len_read < 0)
+	{
+		free(*storage);
+		return (-1);
+	}
+	else
+		return (0);
+}
+
 int					get_next_line(int fd, char **line)
 {
-	char		*buffer;
-	char		*temp;
 	static char	*storage[OPEN_MAX];
-	int			len_read;
+	int			buffer_read;
 
 	if (BUFFER_SIZE < 1 || !line || fd < 0 || fd > OPEN_MAX)
 		return (-1);
 	if (!(storage[fd]))
 		if (!(storage[fd] = ft_strdup("")))
 			return (-1);
-	if (!(buffer = malloc(sizeof(*buffer) * BUFFER_SIZE + 1)))
+	buffer_read = read_buffer(fd, &storage[fd], line);
+	if (buffer_read == 1)
+		return (1);
+	if (buffer_read == -1)
 		return (-1);
-	while ((len_read = read(fd, buffer, BUFFER_SIZE)) > 0)
-	{
-		buffer[len_read] = '\0';
-		temp = ft_strjoin(storage[fd], buffer);
-		free(storage[fd]);
-		storage[fd] = temp;
-		if ((find_break(storage[fd], line)) == 1)
-			return (1);
-	}
-	free(buffer);
-	if (len_read < 0)
-	{
-		free(storage[fd]);
-		return (-1);
-	}
-	else if ((find_break(storage[fd], line)) == 1)
+	if ((find_break(storage[fd], line)) == 1)
 		return (1);
 	if (ft_strlen(storage[fd]) > 0)
 		*line = ft_strdup(storage[fd]);

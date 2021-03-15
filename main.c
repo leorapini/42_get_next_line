@@ -22,7 +22,9 @@ int     main(int ac, char **av)
 		printf("%s\n", line);
 		free(line);
 	}
-		
+	
+	if (line)
+		free(line);		
 	close(fd);     
         return (0);     
 }              
