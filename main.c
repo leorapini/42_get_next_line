@@ -23,8 +23,6 @@ int     main(int ac, char **av)
 		free(line);
 	}
 	
-	if (line)
-		free(line);		
 	close(fd);     
         return (0);     
 }              

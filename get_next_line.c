@@ -6,12 +6,11 @@
 /*   By: lpinheir <lpinheir@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/23 11:37:31 by lpinheir          #+#    #+#             */
-/*   Updated: 2021/03/15 12:18:07 by lpinheir         ###   ########.fr       */
+/*   Updated: 2021/03/16 13:31:39 by lpinheir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include <stdio.h>
 
 static void			ft_bzero(void *s, size_t n)
 {
@@ -53,10 +52,7 @@ static size_t		find_break(char *buff, char **line)
 
 	str_len = 0;
 	if (buff[0] == '\0')
-	{
-		*line = ft_strdup("");
 		return (0);
-	}
 	if ((overflow = ft_strchr(buff, 10)) == NULL)
 		return (0);
 	while (buff[str_len] != '\0' && buff[str_len] != '\n')
@@ -76,7 +72,8 @@ static int			read_buffer(int fd, char **storage, char **line)
 	char	*temp;
 	int		len_read;
 
-	buffer = malloc(sizeof(*buffer) * BUFFER_SIZE + 1);
+	if (!(buffer = malloc(sizeof(*buffer) * BUFFER_SIZE + 1)))
+		return (-1);
 	while ((len_read = read(fd, buffer, BUFFER_SIZE)) > 0)
 	{
 		buffer[len_read] = '\0';
@@ -91,10 +88,7 @@ static int			read_buffer(int fd, char **storage, char **line)
 	}
 	free(buffer);
 	if (len_read < 0)
-	{
-		free(*storage);
 		return (-1);
-	}
 	else
 		return (0);
 }
@@ -113,11 +107,17 @@ int					get_next_line(int fd, char **line)
 	if (buffer_read == 1)
 		return (1);
 	if (buffer_read == -1)
+	{
+		free(storage[fd]);
 		return (-1);
+	}
 	if ((find_break(storage[fd], line)) == 1)
 		return (1);
 	if (ft_strlen(storage[fd]) > 0)
 		*line = ft_strdup(storage[fd]);
+	else
+		*line = ft_strdup("");
 	free(storage[fd]);
+	storage[fd] = NULL;
 	return (0);
 }
