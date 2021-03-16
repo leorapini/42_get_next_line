@@ -6,11 +6,11 @@
 /*   By: lpinheir <lpinheir@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/23 11:37:31 by lpinheir          #+#    #+#             */
-/*   Updated: 2021/03/16 13:31:39 by lpinheir         ###   ########.fr       */
+/*   Updated: 2021/03/16 14:13:41 by lpinheir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 static void			ft_bzero(void *s, size_t n)
 {

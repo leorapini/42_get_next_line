@@ -6,11 +6,11 @@
 /*   By: lpinheir <lpinheir@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/02 16:55:27 by lpinheir          #+#    #+#             */
-/*   Updated: 2021/03/12 13:29:31 by lpinheir         ###   ########.fr       */
+/*   Updated: 2021/03/16 14:14:13 by lpinheir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "get_next_line.h"
+#include "get_next_line_bonus.h"
 
 size_t			ft_strlen(const char *s)
 {
