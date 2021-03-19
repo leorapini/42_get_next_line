@@ -15,7 +15,7 @@ It. returns. a. line. ending. with. a. newline. That's it.
 
 ## Room for improvement
   
-  - I'm not satisfied with the design of the function. o/ 
+  - I'm not satisfied with the design of the function. Can't wait to refactor it when I have some time. 
 
 
 ## License
