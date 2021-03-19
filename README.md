@@ -1,5 +1,24 @@
 # get_next_line
+Reading a line on a fd is way too tedious.
 
-Calling your function get_next_line in a loop will then allow you to read the text available on a file descriptor one line at a time until the EOF.
+## Motivation
 
-Project for 42 École - 42 São Paulo
+Part of the 42 cursus (42 École / 42 São Paulo), get_next_line is a function that returns a line ending with a newline, read from a file descriptor. 
+
+## Features
+
+It. returns. a. line. ending. with. a. newline. That's it.
+
+## Technologies
+
+  - C
+
+## Room for improvement
+  
+  - I'm not satisfied with the design of the function. o/ 
+
+
+## License
+
+Use-at-your-own-risk license. 
+
