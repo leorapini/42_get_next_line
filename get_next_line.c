@@ -6,13 +6,13 @@
 /*   By: lpinheir <lpinheir@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/23 11:37:31 by lpinheir          #+#    #+#             */
-/*   Updated: 2021/03/16 16:33:43 by lpinheir         ###   ########.fr       */
+/*   Updated: 2021/05/21 11:53:37 by lpinheir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-static void			ft_bzero(void *s, size_t n)
+static void	ft_bzero(void *s, size_t n)
 {
 	unsigned char	*news;
 
@@ -45,7 +45,7 @@ char	*ft_strchr(const char *s, int c)
 	return (0);
 }
 
-static size_t		find_break(char *buff, char **line)
+static size_t	find_break(char *buff, char **line)
 {
 	int		str_len;
 	char	*overflow;
