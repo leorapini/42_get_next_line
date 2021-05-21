@@ -6,7 +6,7 @@
 /*   By: lpinheir <lpinheir@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/23 11:37:31 by lpinheir          #+#    #+#             */
-/*   Updated: 2021/05/21 15:21:14 by lpinheir         ###   ########.fr       */
+/*   Updated: 2021/05/21 15:27:07 by lpinheir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,12 +69,11 @@ static size_t	find_break(char *buff, char **line)
 
 static char	*new_storage(char *storage, char *buffer)
 {
-	char *temp;
-	
+	char	*temp;
+
 	temp = ft_strjoin(storage, buffer);
 	free(storage);
 	storage = temp;
-
 	return (storage);
 }	
 
@@ -90,8 +89,8 @@ static int	read_buffer(int fd, char **storage, char **line)
 	while (len_read > 0)
 	{
 		buffer[len_read] = '\0';
-		*storage = new_storage(*storage, buffer);	
-		if ((find_break(*storage, line)) == 1)
+		*storage = new_storage(*storage, buffer);
+		if (find_break(*storage, line) == 1)
 		{
 			free(buffer);
 			return (1);
