@@ -6,7 +6,7 @@
 /*   By: lpinheir <lpinheir@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/23 11:37:31 by lpinheir          #+#    #+#             */
-/*   Updated: 2021/05/21 11:53:37 by lpinheir         ###   ########.fr       */
+/*   Updated: 2021/05/21 15:21:14 by lpinheir         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,8 @@ static size_t	find_break(char *buff, char **line)
 	str_len = 0;
 	if (buff[0] == '\0')
 		return (0);
-	if ((overflow = ft_strchr(buff, 10)) == NULL)
+	overflow = ft_strchr(buff, 10);
+	if (overflow == NULL)
 		return (0);
 	while (buff[str_len] != '\0' && buff[str_len] != '\n')
 		str_len++;
@@ -66,25 +67,36 @@ static size_t	find_break(char *buff, char **line)
 	return (1);
 }
 
-static int			read_buffer(int fd, char **storage, char **line)
+static char	*new_storage(char *storage, char *buffer)
+{
+	char *temp;
+	
+	temp = ft_strjoin(storage, buffer);
+	free(storage);
+	storage = temp;
+
+	return (storage);
+}	
+
+static int	read_buffer(int fd, char **storage, char **line)
 {
 	char	*buffer;
-	char	*temp;
 	int		len_read;
 
-	if (!(buffer = malloc(sizeof(*buffer) * BUFFER_SIZE + 1)))
+	buffer = malloc(sizeof(*buffer) * BUFFER_SIZE + 1);
+	if (!buffer)
 		return (-1);
-	while ((len_read = read(fd, buffer, BUFFER_SIZE)) > 0)
+	len_read = read(fd, buffer, BUFFER_SIZE);
+	while (len_read > 0)
 	{
 		buffer[len_read] = '\0';
-		temp = ft_strjoin(*storage, buffer);
-		free(*storage);
-		*storage = temp;
+		*storage = new_storage(*storage, buffer);	
 		if ((find_break(*storage, line)) == 1)
 		{
 			free(buffer);
 			return (1);
 		}
+		len_read = read(fd, buffer, BUFFER_SIZE);
 	}
 	free(buffer);
 	if (len_read < 0)
@@ -93,7 +105,7 @@ static int			read_buffer(int fd, char **storage, char **line)
 		return (0);
 }
 
-int					get_next_line(int fd, char **line)
+int	get_next_line(int fd, char **line)
 {
 	static char	*storage[OPEN_MAX];
 	int			buffer_read;
@@ -101,8 +113,7 @@ int					get_next_line(int fd, char **line)
 	if (BUFFER_SIZE < 1 || !line || fd < 0 || fd >= OPEN_MAX)
 		return (-1);
 	if (!(storage[fd]))
-		if (!(storage[fd] = ft_strdup("")))
-			return (-1);
+		storage[fd] = ft_strdup("");
 	buffer_read = read_buffer(fd, &storage[fd], line);
 	if (buffer_read == 1)
 		return (1);
