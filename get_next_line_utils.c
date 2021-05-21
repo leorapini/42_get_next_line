@@ -12,7 +12,7 @@
 
 #include "get_next_line.h"
 
-size_t			ft_strlen(const char *s)
+size_t	ft_strlen(const char *s)
 {
 	size_t	len;
 
@@ -22,7 +22,7 @@ size_t			ft_strlen(const char *s)
 	return (len);
 }
 
-char			*ft_strdup(const char *s1)
+char	*ft_strdup(const char *s1)
 {
 	char	*buffer;
 	int		len;
@@ -35,7 +35,7 @@ char			*ft_strdup(const char *s1)
 	return (buffer);
 }
 
-char			*ft_substr(char const *s, unsigned int start, size_t len)
+char	*ft_substr(char const *s, unsigned int start, size_t len)
 {
 	char	*buffer;
 	int		i;
@@ -59,18 +59,18 @@ char			*ft_substr(char const *s, unsigned int start, size_t len)
 	return (buffer);
 }
 
-char			*ft_strjoin(char const *s1, char const *s2)
+char	*ft_strjoin(char const *s1, char const *s2)
 {
 	int		i;
 	int		j;
 	char	*buffer;
 
-	if (!s1 || !s2)
-		return (NULL);
 	i = 0;
 	j = 0;
-	buffer = (char*)malloc(sizeof(*s1) *
-			((ft_strlen(s1) + ft_strlen(s2)) + 1));
+	if (!s1 || !s2)
+		return (NULL);
+	buffer = (char *)malloc(sizeof(*s1)
+			* ((ft_strlen(s1) + ft_strlen(s2)) + 1));
 	if (buffer == NULL)
 		return (NULL);
 	while (s1[i] != 0)
@@ -82,7 +82,7 @@ char			*ft_strjoin(char const *s1, char const *s2)
 	return (buffer);
 }
 
-size_t			ft_strlcpy(char *dst, const char *src, size_t dstsize)
+size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize)
 {
 	size_t	srclen;
 	size_t	counter;

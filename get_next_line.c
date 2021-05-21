@@ -25,7 +25,7 @@ static void			ft_bzero(void *s, size_t n)
 	}
 }
 
-static char			*ft_strchr(const char *s, int c)
+char	*ft_strchr(const char *s, int c)
 {
 	char	target;
 	int		len;
